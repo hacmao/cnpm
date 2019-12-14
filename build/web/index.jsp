@@ -16,7 +16,7 @@
         });
     });
 </script>
-
+<!--lol-->
 <c:set var='view' value='/index' scope='session' />
 <div style="padding:5px"></div>
 <section class="cid-qTkA127IK8 mbr-fullscreen mbr-parallax-background" id="header2-1">
