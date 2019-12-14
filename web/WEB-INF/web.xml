@@ -114,4 +114,5 @@
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
         </jsp-property-group>
     </jsp-config>
+
 </web-app>

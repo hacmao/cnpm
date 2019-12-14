@@ -59,27 +59,39 @@ div {
         <img src="img/logo.png" style="width: 100%">
     </div>
 <div class="one-half last" style="width:60%;box-shadow:0 3px 6px rgba(0, 0, 0, 0.4);">
-  <form action="viewAddProduct" method="post">
-      <strong><label for="name">Name</label></strong><br>
-    <input type="text" id="name" name="name" placeholder="Name of product.."><br> 
-    <strong><label for="category_id">Category ID</label></strong><br> 
-    <input type="text" id="category_id" name="category_id" placeholder="Category id.."><br> 
+  <form action="viewAddProduct" enctype="multipart/form-data" method="post">
+        <strong><label for="name">Name</label></strong><br>
+        <input type="text" id="name" name="name" placeholder="Name of product.."><br> 
+        <strong><label for="category_id">Category ID</label></strong><br> 
+        <input type="text" id="category_id" name="category_id" placeholder="Category id.."><br> 
+
+        <strong><label for="price">Price</label></strong> <br> 
+        <input type="text" id="price" name="price" placeholder="Price of product.."><br> 
+
+        <strong><label for="warranty">Warranty</label></strong> <br> 
+        <input type="text" id="price" name="warranty" placeholder="Warranty of product.."><br> 
+        
+        <strong><label for="Description">Description</label></strong><br> 
+        <input type="text" id="Description" name="Description" placeholder="Description of product.."><br> 
+
+        <strong><label for="DescriptionDetail">Description Detail</label></strong><br> 
+        <textarea id="DescriptionDetail" name="DescriptionDetail">
+        </textarea><br>
     
-    <strong><label for="price">Price</label></strong> <br> 
-    <input type="text" id="price" name="price" placeholder="Price of product.."><br> 
-    
-    <strong><label for="Description">Description</label></strong><br> 
-    <input type="text" id="Description" name="Description" placeholder="Description of product.."><br> 
-    
-    <strong><label for="DescriptionDetail">Description Detail</label></strong><br> 
-    <textarea id="DescriptionDetail" name="DescriptionDetail">
-    </textarea>
-    
-  
-    <input type="submit" value="Submit">
-  </form>
+        <strong><label>Main Image </label></strong>
+        <input type="file" onchange="preview_image(event)" name="img" id="img" value="" class="text requiredField"><br>
+
+        <strong><label>Description Image </label></strong>
+        <input type="file" onchange="preview_image(event)" name="image1" id="Myname1" value="" class="text requiredField">
+        <input type="file" name="image2" id="Myname2" onchange="preview_image(event)" value="" class="text requiredField">
+        <input type="file" name="image3" id="Myname3" onchange="preview_image(event)" value="" class="text requiredField">
+        <input type="file" name="image4" id="Myname4" onchange="preview_image(event)" value="" class="text requiredField">
+        <input type="file" name="image5" id="Myname5"onchange="preview_image(event)"  value="" class="text requiredField">
+        
+        
+        <br><input type="submit" value="Submit">
+    </form>
 </div>
 
     
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
+<div style="padding: 700px"></div>

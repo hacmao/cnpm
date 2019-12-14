@@ -5,23 +5,20 @@
  */
 package addProduct;
 
-import entity.Product;
+import java.io.*;
+import java.sql.*;
+import javax.naming.*;
+import org.xml.sax.Attributes;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.imageio.ImageIO;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.*;
+import java.util.List;
 import java.util.ArrayList;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
+import java.nio.file.*;
 
 /**
  *
@@ -29,34 +26,77 @@ import javax.sql.DataSource;
  */
 public class addProductDB extends HttpServlet {
 
-
+    private String PATH = "D:\\BK2\\cnpm\\final2\\web\\img\\";
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String name = (String) session.getAttribute("name");
-        String product_id ;
-        String category_id = (String) session.getAttribute("category_id");
-        String price = (String) session.getAttribute("price");
+        int product_id = Integer.parseInt((String) session.getAttribute("product_id")) ;
+        int category_id = Integer.parseInt((String) session.getAttribute("category_id"));
+        float price = Float.parseFloat((String) session.getAttribute("price")); 
         String Description = (String) session.getAttribute("Description");
         String DescriptionDetail = (String) session.getAttribute("descriptionDetail");
+        String warranty = (String) session.getAttribute("warranty");
+        List<String> img = (List<String>) session.getAttribute("allImage"); 
+        
+        while (img.size() != 6) {
+            img.add("");
+        }
         try {
             Context initContext = new InitialContext(); 
             Context envContext = (Context) initContext.lookup("java:comp/env");
             DataSource ds = (DataSource) envContext.lookup("jdbc/lab8"); 
             Connection conn = ds.getConnection();
-            Statement sttm = conn.createStatement( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            String sql = "select count(*) as numRow from product";  
-            ResultSet rs = sttm.executeQuery(sql); 
-            product_id = Integer.toString(rs.getInt("numRow") + 1); 
-            sttm = conn.createStatement();
-            sql = "insert into product values (" + product_id + ",\"" + name + "\"," + price + ",\"" + 
-                    Description + "\",\"" + DescriptionDetail + "\",\"\",\"\",\"2019-12-2\"," + category_id + "," + product_id + ");";
-            session.setAttribute("sql", sql);
+            String sql = "insert into product(product_id, name, price, description, description_detail, image,thumb_image, last_update, Categorycategory_id, product_detailproduct_id) "
+                + "values (?,?,?,?,?,?,?, ?, ?, ?); "
+                + " insert into product_detail(product_id, information, image1, image2, image3, image4, image5, accessories, guaranty, ordered_productorder_id, ordered_productproduct_id)"
+                +" values (?,?,?,?,?,?,?,?,?,?,?)";
             
-            sttm.executeUpdate(sql); 
-            request.getRequestDispatcher("/addSuccess.jsp").forward(request, response);
-
+            PreparedStatement pst = conn.prepareStatement(sql);
+            
+            // product 
+            pst.setInt(1, product_id);
+            pst.setString(2, name);
+            pst.setFloat(3, price);
+            pst.setString(4, Description);
+            pst.setString(5, DescriptionDetail);
+            pst.setString(6, img.get(0));
+            pst.setString(7, img.get(0)) ;
+            pst.setString(8, "2019-09-14");
+            pst.setInt(9, category_id);
+            pst.setInt(10, product_id);
+            
+            // product detail 
+            pst.setInt(11, product_id);
+            pst.setString(12, Description);
+            pst.setString(13, img.get(1));
+            pst.setString(14, img.get(2));
+            pst.setString(15, img.get(3));
+            pst.setString(16, img.get(4));
+            pst.setString(17, img.get(5));
+            pst.setString(18, "");
+            pst.setString(19, warranty);
+            pst.setInt(20, category_id); 
+            pst.setInt(21, product_id);
+            
+            
+            sql = pst.toString().split(":")[1];
+            String sql1 = sql.split(";")[0];
+            String sql2 = sql.split(";")[1];
+            sql1 = sql1.replace('\'', '"');
+            sql2 = sql2.replace('\'', '"');
+            session.setAttribute("sql", sql1);
+            
+            Statement sttm = conn.createStatement();
+            sttm.executeUpdate(sql1);
+            session.setAttribute("sql", sql1 + "---" + sql2);
+            sttm.executeUpdate(sql2);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            
         } catch (SQLException | NamingException ex) {
+            
+            request.getRequestDispatcher("/addFail.jsp").forward(request, response);
             System.err.println(ex);
         }
         
@@ -75,5 +115,6 @@ public class addProductDB extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+    
+    
 }
