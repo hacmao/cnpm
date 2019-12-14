@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>listener.ControllerServletListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>ControllerServlet</servlet-name>
+        <servlet-class>controller.ControllerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>viewAddProduct</servlet-name>
+        <servlet-class>addProduct.viewAddProduct</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addProductDB</servlet-name>
+        <servlet-class>addProduct.addProductDB</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>checkAdmin</servlet-name>
+        <servlet-class>addProduct.checkAdmin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>signUp</servlet-name>
+        <servlet-class>addProduct.signUp</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>controller.search</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControllerServlet</servlet-name>
+        <url-pattern>/ControllerServlet</url-pattern>
+        <url-pattern>/product</url-pattern>
+        <url-pattern>/category</url-pattern>
+        <url-pattern>/addToCart</url-pattern>
+        <url-pattern>/viewCart</url-pattern>
+        <url-pattern>/updateCart</url-pattern>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewAddProduct</servlet-name>
+        <url-pattern>/viewAddProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addProductDB</servlet-name>
+        <url-pattern>/addProductDB</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>checkAdmin</servlet-name>
+        <url-pattern>/checkAdmin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>signUp</servlet-name>
+        <url-pattern>/signUp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <context-param>
+        <param-name>imgProductPath</param-name>
+        <param-value>img/</param-value>
+    </context-param>
+    <resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/lab8</res-ref-name>
+        <res-type>javax.sql.ConnectionPoolDataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <welcome-file-list>
+        <welcome-file>faces/index.xhtml</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <jsp-config>
+        <jsp-property-group>
+            <description>JSP configuration for the store front</description>
+            <url-pattern>/index.jsp</url-pattern>
+            <url-pattern>/contact.jsp</url-pattern>
+            <url-pattern>/category.jsp</url-pattern>
+            <url-pattern>/product.jsp</url-pattern>
+            <url-pattern>/viewCart.jsp</url-pattern>
+            <url-pattern>/profile.jsp</url-pattern>
+            <url-pattern>/addProduct.jsp</url-pattern>
+            <url-pattern>/viewAddProduct.jsp</url-pattern>
+            <!-- và các trang khác -->
+            <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
+        </jsp-property-group>
+        <!-- optional for admin GUI -->
+        <jsp-property-group>
+            <description>JSP configuration for the admin console
+    </description>
+            <url-pattern>/admin/*</url-pattern>
+            <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
+        </jsp-property-group>
+    </jsp-config>
+</web-app>

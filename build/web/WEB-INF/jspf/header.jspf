@@ -1,0 +1,254 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<%
+    String isLogin = (String) session.getAttribute("isLogin") ; 
+%>
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- CSS Files -->
+        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+        <link rel="shortcut icon" type="image/x-icon" href="img/icon/apple.ico" />
+        
+
+        <link rel="stylesheet" type="text/css" href="css/footer.css">
+        <link rel="stylesheet" type="text/css" href="css/header.css">
+        <link rel="stylesheet" type="text/css" href="css/component.css">
+        <link rel="stylesheet" href="css/normalize.min.css">
+
+        <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+
+
+
+    <link rel="stylesheet" href="assets/dropdown/css/style.css">
+
+    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css">
+    <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+        
+        <!-- JS Files -->
+
+  
+        <script src="js/09c5070f41.js" crossorigin="anonymous"></script>
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+  
+        <title>Apple</title>
+        <style>
+        
+
+          .sticky {
+            width: 100%
+          }
+
+          .fixed {
+            position: fixed;
+            top:0;
+          }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div id="sticky" class="sticky">
+                <br><br>
+            <nav>
+                <br>
+                <div class="menu-container">
+                <!-- Menu -->
+                <ul class="menu">
+                    <li class="menu-apple">
+                    <a href="index.jsp">
+                        <i class="fab fa-apple" aria-hidden="true"></i>
+                    </a>
+                    </li>
+                    <li class="menu-mac">
+                    <a href="category?1">
+                        <span>Mac</span>
+                    </a>
+                    </li>
+                    <li class="menu-iPad">
+                    <a href="category?2">
+                        <span>iPad</span>
+                    </a>
+                    </li>
+                    <li class="menu-iPhone">
+                    <a href="category?3">
+                        <span>iPhone</span>
+                    </a>
+                    </li>
+                    <li class="menu-watch">
+                    <a href="category?4">
+                        <span>Watch</span>
+                    </a>
+                    </li>
+                    <li class="menu-tv">
+                    <a href="category?5">
+                        <span>TV</span>
+                    </a>
+                    </li>
+
+                    <li class="menu-search">
+                    <a href="#">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </a>
+                    </li>
+                    <li class="menu-store">
+                    <a href="viewCart">
+                        <i class="fas fa-cart-plus"></i> 
+                        <span> 
+                            <c:choose>
+                                <c:when test="${cart.numberOfItems == null}">
+                                    0
+                                </c:when>
+                                <c:otherwise>
+                                        ${cart.numberOfItems}
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${cart.numberOfItems == 1}">
+                                    item
+                                </c:when>
+                                <c:otherwise>
+                                    items
+                                </c:otherwise>
+                            </c:choose>
+                        </span>
+                    </a>
+                    </li> 
+
+                        <c:choose> 
+                            <c:when test = "${(isLogin == null) or (isLogin=='0')}">
+                                <li class="menu-store">
+                                    <a href="login/login.html">
+                                        <i class="fas fa-address-card"></i>
+                                    </a>
+                                </li>
+                            </c:when> 
+                            <c:otherwise>
+                                <li class="menu-store">
+                                    <a href="profile.jsp">
+                                        <i class="fas fa-address-card"></i>
+                                    </a>
+                                    <a href="logout.jsp"> 
+                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="fas fa-sign-out-alt"></i>
+                                    </a>
+                                </li>
+
+
+
+                            </c:otherwise>
+                        </c:choose> 
+
+
+
+                </ul>
+
+
+
+
+                <!-- Search -->
+                <div class="menu-search-container">
+                    <div class="menu-search-input">
+                    <form action="search" method="get">
+                    <a href="#">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </a>
+                    <input name="search" class="menu-search-input" type="text" aria-label="Search apple.com" placeholder="Search apple.com" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false">
+                    </form>
+                    </div>
+                    <a class="menu-search-close" href="#">
+                    <i class="fa fa-close" aria-hidden="true"></i>
+                    </a> 
+                    <div class="search-sub-menu">
+                    <h3>Quick Links</h3>
+                    <ul>
+                    <li><a href="category?1">Mac</a></li>
+                    <li><a href="category?2">iPad</a></li>
+                    <li><a href="category?3">iPhone</a></li>
+                    <li><a href="category?4">Watch</a></li>
+                    <li><a href="category?5">TV</a></li>
+                    </ul>
+                </div>
+                </div>
+
+                </div>
+            </nav>
+            </div>
+        </header>
+        <div class="fade-screen"></div>
+            <script src="https://static.codepen.io/assets/common/stopExecutionOnTimeout-de7e2ef6bfefd24b79a3f68b414b87b8db5b08439cac3f1012092b2290c719cd.js"></script>
+        
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+            <script id="rendered-js" >
+                (function () {
+        
+            'use strict';
+        
+            var $searchView = $('.menu-search-container');
+            var $menu = $('.menu-mac, .menu-iPad, .menu-iPhone, .menu-watch, .menu-tv, .menu-support, .menu-search, .menu-store');
+            var $fadeScreen = $('.fade-screen');
+        
+            $('li.menu-search a, .fade-screen, .menu-search-close').on('click', function (e) {
+        
+            $searchView.toggleClass('active');
+        
+            setTimeout(function () {
+                $searchView.children().find('input').focus();
+            }, 1100);
+        
+            $fadeScreen.toggleClass('visible');
+            $menu.removeClass('is-closed');
+            $menu.toggleClass('hidden');
+        
+            e.preventDefault();
+            });
+        
+            $('.fade-screen,.menu-search-close').on('click', function (e) {
+            $menu.toggleClass('is-closed');
+            e.preventDefault();
+            });
+        
+        })();
+                //# sourceURL=pen.js
+        </script>
+        <script>
+            function findOffset(element) {
+        var top = 0, left = 0;
+
+        do {
+          top += element.offsetTop  || 0;
+          left += element.offsetLeft || 0;
+          element = element.offsetParent;
+        } while(element);
+
+        return {
+          top: top,
+          left: left
+        };
+      }
+
+      window.onload = function () {
+        var stickyHeader = document.getElementById('sticky');
+        var headerOffset = findOffset(stickyHeader);
+
+        window.onscroll = function() {
+          // body.scrollTop is deprecated and no longer available on Firefox
+          var bodyScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+          if (bodyScrollTop > headerOffset.top) {
+            stickyHeader.classList.add('fixed');
+          } else {
+            stickyHeader.classList.remove('fixed');
+          }
+        };
+      };
+        </script>
+
+             
+            
