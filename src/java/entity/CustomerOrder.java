@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,32 +40,23 @@ public class CustomerOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "order_id")
     private Integer orderId;
-    @Basic(optional = false)
-    @NotNull
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "amount")
-    private int amount;
-    @Basic(optional = false)
-    @NotNull
+    private Double amount;
     @Column(name = "date_created")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
     @Basic(optional = false)
     @NotNull
     @Column(name = "confirmation_number")
     private int confirmationNumber;
-    @JoinColumn(name = "Customercustomer_id", referencedColumnName = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     @ManyToOne(optional = false)
-    private Customer customercustomerid;
-    @JoinColumn(name = "ordered_productorder_id", referencedColumnName = "order_id")
-    @ManyToOne
-    private OrderedProduct orderedProductorderId;
-    @JoinColumn(name = "ordered_productproduct_id", referencedColumnName = "product_id")
-    @ManyToOne(optional = false)
-    private OrderedProduct orderedProductproductId;
+    private Customer customerId;
 
     public CustomerOrder() {
     }
@@ -72,10 +65,8 @@ public class CustomerOrder implements Serializable {
         this.orderId = orderId;
     }
 
-    public CustomerOrder(Integer orderId, int amount, Date dateCreated, int confirmationNumber) {
+    public CustomerOrder(Integer orderId, int confirmationNumber) {
         this.orderId = orderId;
-        this.amount = amount;
-        this.dateCreated = dateCreated;
         this.confirmationNumber = confirmationNumber;
     }
 
@@ -87,11 +78,11 @@ public class CustomerOrder implements Serializable {
         this.orderId = orderId;
     }
 
-    public int getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -111,28 +102,12 @@ public class CustomerOrder implements Serializable {
         this.confirmationNumber = confirmationNumber;
     }
 
-    public Customer getCustomercustomerid() {
-        return customercustomerid;
+    public Customer getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomercustomerid(Customer customercustomerid) {
-        this.customercustomerid = customercustomerid;
-    }
-
-    public OrderedProduct getOrderedProductorderId() {
-        return orderedProductorderId;
-    }
-
-    public void setOrderedProductorderId(OrderedProduct orderedProductorderId) {
-        this.orderedProductorderId = orderedProductorderId;
-    }
-
-    public OrderedProduct getOrderedProductproductId() {
-        return orderedProductproductId;
-    }
-
-    public void setOrderedProductproductId(OrderedProduct orderedProductproductId) {
-        this.orderedProductproductId = orderedProductproductId;
+    public void setCustomerId(Customer customerId) {
+        this.customerId = customerId;
     }
 
     @Override

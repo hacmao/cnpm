@@ -12,9 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import session_bean.CategorySessionBean;
 import session_bean.ProductSessionBean;
 import session_bean.ProductDetailSessionBean;
+import session_bean.OrderManager;
 import entity.*;
 import java.util.*;
 import javax.servlet.http.HttpSession;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+import javax.validation.Validator;
+import javax.validation.ConstraintViolation;
 
 //@WebServlet(name = "ControllerServlet", urlPatterns = {"/ControllerServlet","/category","/product"})
 
@@ -26,6 +31,9 @@ public class ControllerServlet extends HttpServlet {
     private ProductSessionBean productSB;
     @EJB
     private ProductDetailSessionBean productDetailSB; 
+    
+    @EJB 
+    private OrderManager orderManager ;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -103,10 +111,13 @@ public class ControllerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String userPath = request.getServletPath();
         HttpSession session = request.getSession();
+        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
         if (userPath.equals("/updateCart")) {
-            ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
             int productId = Integer.parseInt(request.getParameter("productId"));
             String quantity = request.getParameter("quantity");
             
@@ -118,6 +129,71 @@ public class ControllerServlet extends HttpServlet {
             }
         }
         
-        
+        else if (userPath.equals("/purchase")) {
+            if (cart != null) {
+                Form form = new Form();
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                String phone = request.getParameter("phone");
+                String address = request.getParameter("address");
+                String cityRegion = request.getParameter("cityRegion");
+                String ccNumber = request.getParameter("creditcard");
+
+                form.setName(name);
+                form.setEmail(email);
+                form.setPhone(phone);
+                form.setAddress(address);
+                form.setCityRegion(cityRegion);
+                form.setCcNumber(ccNumber);
+
+                boolean validationErrorFlag = false;
+                Set<ConstraintViolation<Form>> violations = validator.validate(form);
+                if (violations.size() > 0) {
+                    validationErrorFlag = true;
+                    request.setAttribute("validationErrorFlag", validationErrorFlag);
+                    userPath = "/checkout";
+                } else {
+                    int orderId = orderManager.placeOrder(name, email, phone, address, cityRegion, ccNumber, cart);
+                    if (orderId != 0) {
+                        // in case language was set using toggle, get language choice before destroying session
+                        Locale locale = (Locale)
+                        session.getAttribute("javax.servlet.jsp.jstl.fmt.locale.session");
+                        String language = "";
+                        if (locale != null) {
+                            language = (String) locale.getLanguage();
+                        }
+                        // dissociate shopping cart from session
+                        cart = null;
+                        // end session
+                        session.invalidate();
+                        if (!language.isEmpty()) { //if user changed language using the toggle,
+                            // reset the language attribute - otherwise
+                            request.setAttribute("language", language); // language will be switched on confirmation page!
+                        }
+                        // get order details
+                        Map orderMap = orderManager.getOrderDetails(orderId);
+                        // place order details in request scope
+                        request.setAttribute("customer", orderMap.get("customer"));
+                        request.setAttribute("products", orderMap.get("products"));
+                        request.setAttribute("orderRecord", orderMap.get("orderRecord"));
+                        request.setAttribute("orderedProducts", orderMap.get("orderedProducts"));
+                        userPath = "/confirmation";
+                        // otherwise, send back to checkout page and display error
+                    }else {
+                            //userPath = "/checkout";
+                            //request.setAttribute("orderFailureFlag", true);
+                            request.getRequestDispatcher("addFail.jsp").forward(request, response);
+                    }
+                }
+            }
+        }
+        String url = userPath + ".jsp";
+        try {
+            request.getRequestDispatcher(url).forward(request, response);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
+

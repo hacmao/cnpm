@@ -5,15 +5,13 @@
  */
 package entity;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -38,8 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ProductDetail.findByImage4", query = "SELECT p FROM ProductDetail p WHERE p.image4 = :image4")
     , @NamedQuery(name = "ProductDetail.findByImage5", query = "SELECT p FROM ProductDetail p WHERE p.image5 = :image5")
     , @NamedQuery(name = "ProductDetail.findByAccessories", query = "SELECT p FROM ProductDetail p WHERE p.accessories = :accessories")
-    , @NamedQuery(name = "ProductDetail.findByGuaranty", query = "SELECT p FROM ProductDetail p WHERE p.guaranty = :guaranty")
-    , @NamedQuery(name = "ProductDetail.findByOrderedProductproductId", query = "SELECT p FROM ProductDetail p WHERE p.orderedProductproductId = :orderedProductproductId")})
+    , @NamedQuery(name = "ProductDetail.findByGuaranty", query = "SELECT p FROM ProductDetail p WHERE p.guaranty = :guaranty")})
 public class ProductDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -88,11 +85,6 @@ public class ProductDetail implements Serializable {
     @Size(min = 1, max = 2000)
     @Column(name = "guaranty")
     private String guaranty;
-    @Column(name = "ordered_productproduct_id")
-    private Integer orderedProductproductId;
-    @JoinColumn(name = "ordered_productorder_id", referencedColumnName = "order_id")
-    @ManyToOne
-    private OrderedProduct orderedProductorderId;
 
     public ProductDetail() {
     }
@@ -184,31 +176,6 @@ public class ProductDetail implements Serializable {
     public void setGuaranty(String guaranty) {
         this.guaranty = guaranty;
     }
-    
-    public List<String> getAllImages(){
-        List<String> images = new ArrayList<String>();
-        if (!image1.equals("")) images.add(image1);
-        if (!image2.equals("")) images.add(image2);
-        if (!image3.equals("")) images.add(image3);
-        if (!image4.equals("")) images.add(image4);
-        if (!image5.equals("")) images.add(image5);
-        return images;
-    }
-    public Integer getOrderedProductproductId() {
-        return orderedProductproductId;
-    }
-
-    public void setOrderedProductproductId(Integer orderedProductproductId) {
-        this.orderedProductproductId = orderedProductproductId;
-    }
-
-    public OrderedProduct getOrderedProductorderId() {
-        return orderedProductorderId;
-    }
-
-    public void setOrderedProductorderId(OrderedProduct orderedProductorderId) {
-        this.orderedProductorderId = orderedProductorderId;
-    }
 
     @Override
     public int hashCode() {
@@ -234,5 +201,13 @@ public class ProductDetail implements Serializable {
     public String toString() {
         return "entity.ProductDetail[ productId=" + productId + " ]";
     }
-    
+    public List<String> getAllImages(){
+        List<String> images = new ArrayList<String>();
+        if (!image1.equals("")) images.add(image1);
+        if (!image2.equals("")) images.add(image2);
+        if (!image3.equals("")) images.add(image3);
+        if (!image4.equals("")) images.add(image4);
+        if (!image5.equals("")) images.add(image5);
+        return images;
+    }
 }

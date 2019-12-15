@@ -121,6 +121,7 @@ body {
         <c:choose>
             <c:when test="${isLogin == 1}">
                 <a href="addProduct.jsp"><p><button>Add Product</button></p></a>
+                <a href="checkOrder.jsp"><p><button>Check order</button></p></a>
             </c:when>
         </c:choose>
         

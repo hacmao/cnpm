@@ -1,12 +1,14 @@
 package entity;
 
 import entity.Category;
+import entity.OrderedProduct;
 import java.util.Date;
 import javax.annotation.Generated;
+import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2019-12-14T22:20:42")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2019-12-15T22:37:00")
 @StaticMetamodel(Product.class)
 public class Product_ { 
 
@@ -19,6 +21,7 @@ public class Product_ {
     public static volatile SingularAttribute<Product, Integer> productDetailproductId;
     public static volatile SingularAttribute<Product, String> name;
     public static volatile SingularAttribute<Product, String> description;
+    public static volatile CollectionAttribute<Product, OrderedProduct> orderedProductCollection;
     public static volatile SingularAttribute<Product, Category> categorycategoryid;
 
 }

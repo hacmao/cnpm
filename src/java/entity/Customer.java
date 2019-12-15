@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -35,13 +37,14 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email")
     , @NamedQuery(name = "Customer.findByPhone", query = "SELECT c FROM Customer c WHERE c.phone = :phone")
     , @NamedQuery(name = "Customer.findByAddress", query = "SELECT c FROM Customer c WHERE c.address = :address")
-    , @NamedQuery(name = "Customer.findByCityRegion", query = "SELECT c FROM Customer c WHERE c.cityRegion = :cityRegion")})
+    , @NamedQuery(name = "Customer.findByCityRegion", query = "SELECT c FROM Customer c WHERE c.cityRegion = :cityRegion")
+    , @NamedQuery(name = "Customer.findByCcNumber", query = "SELECT c FROM Customer c WHERE c.ccNumber = :ccNumber")})
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "customer_id")
     private Integer customerId;
     @Basic(optional = false)
@@ -55,10 +58,12 @@ public class Customer implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "email")
     private String email;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 20)
     @Column(name = "phone")
-    private int phone;
+    private String phone;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -69,7 +74,10 @@ public class Customer implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "city_region")
     private String cityRegion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customercustomerid")
+    @Size(max = 20)
+    @Column(name = "cc_number")
+    private String ccNumber;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerId")
     private Collection<CustomerOrder> customerOrderCollection;
 
     public Customer() {
@@ -79,7 +87,7 @@ public class Customer implements Serializable {
         this.customerId = customerId;
     }
 
-    public Customer(Integer customerId, String name, String email, int phone, String address, String cityRegion) {
+    public Customer(Integer customerId, String name, String email, String phone, String address, String cityRegion) {
         this.customerId = customerId;
         this.name = name;
         this.email = email;
@@ -112,11 +120,11 @@ public class Customer implements Serializable {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -134,6 +142,14 @@ public class Customer implements Serializable {
 
     public void setCityRegion(String cityRegion) {
         this.cityRegion = cityRegion;
+    }
+
+    public String getCcNumber() {
+        return ccNumber;
+    }
+
+    public void setCcNumber(String ccNumber) {
+        this.ccNumber = ccNumber;
     }
 
     @XmlTransient

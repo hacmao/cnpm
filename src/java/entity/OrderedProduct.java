@@ -6,19 +6,19 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,59 +29,56 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "OrderedProduct.findAll", query = "SELECT o FROM OrderedProduct o")
+    , @NamedQuery(name = "OrderedProduct.findById", query = "SELECT o FROM OrderedProduct o WHERE o.id = :id")
     , @NamedQuery(name = "OrderedProduct.findByOrderId", query = "SELECT o FROM OrderedProduct o WHERE o.orderId = :orderId")
-    , @NamedQuery(name = "OrderedProduct.findByProductId", query = "SELECT o FROM OrderedProduct o WHERE o.productId = :productId")
     , @NamedQuery(name = "OrderedProduct.findByQuantity", query = "SELECT o FROM OrderedProduct o WHERE o.quantity = :quantity")})
 public class OrderedProduct implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "order_id")
-    private Integer orderId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "product_id")
-    private int productId;
+    private int orderId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "quantity")
     private int quantity;
-    @OneToMany(mappedBy = "orderedProductorderId")
-    private Collection<CustomerOrder> customerOrderCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderedProductproductId")
-    private Collection<CustomerOrder> customerOrderCollection1;
-    @OneToMany(mappedBy = "orderedProductorderId")
-    private Collection<ProductDetail> productDetailCollection;
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    @ManyToOne(optional = false)
+    private Product productId;
 
     public OrderedProduct() {
     }
 
-    public OrderedProduct(Integer orderId) {
-        this.orderId = orderId;
+    public OrderedProduct(Integer id) {
+        this.id = id;
     }
 
-    public OrderedProduct(Integer orderId, int productId, int quantity) {
+    public OrderedProduct(Integer id, int orderId, int quantity) {
+        this.id = id;
         this.orderId = orderId;
-        this.productId = productId;
         this.quantity = quantity;
     }
 
-    public Integer getOrderId() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(int orderId) {
         this.orderId = orderId;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
     }
 
     public int getQuantity() {
@@ -92,37 +89,18 @@ public class OrderedProduct implements Serializable {
         this.quantity = quantity;
     }
 
-    @XmlTransient
-    public Collection<CustomerOrder> getCustomerOrderCollection() {
-        return customerOrderCollection;
+    public Product getProductId() {
+        return productId;
     }
 
-    public void setCustomerOrderCollection(Collection<CustomerOrder> customerOrderCollection) {
-        this.customerOrderCollection = customerOrderCollection;
-    }
-
-    @XmlTransient
-    public Collection<CustomerOrder> getCustomerOrderCollection1() {
-        return customerOrderCollection1;
-    }
-
-    public void setCustomerOrderCollection1(Collection<CustomerOrder> customerOrderCollection1) {
-        this.customerOrderCollection1 = customerOrderCollection1;
-    }
-
-    @XmlTransient
-    public Collection<ProductDetail> getProductDetailCollection() {
-        return productDetailCollection;
-    }
-
-    public void setProductDetailCollection(Collection<ProductDetail> productDetailCollection) {
-        this.productDetailCollection = productDetailCollection;
+    public void setProductId(Product productId) {
+        this.productId = productId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (orderId != null ? orderId.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -133,7 +111,7 @@ public class OrderedProduct implements Serializable {
             return false;
         }
         OrderedProduct other = (OrderedProduct) object;
-        if ((this.orderId == null && other.orderId != null) || (this.orderId != null && !this.orderId.equals(other.orderId))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -141,7 +119,7 @@ public class OrderedProduct implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.OrderedProduct[ orderId=" + orderId + " ]";
+        return "entity.OrderedProduct[ id=" + id + " ]";
     }
     
 }

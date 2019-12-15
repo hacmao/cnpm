@@ -50,8 +50,8 @@ public class addProductDB extends HttpServlet {
             Connection conn = ds.getConnection();
             String sql = "insert into product(product_id, name, price, description, description_detail, image,thumb_image, last_update, Categorycategory_id, product_detailproduct_id) "
                 + "values (?,?,?,?,?,?,?, ?, ?, ?); "
-                + " insert into product_detail(product_id, information, image1, image2, image3, image4, image5, accessories, guaranty, ordered_productorder_id, ordered_productproduct_id)"
-                +" values (?,?,?,?,?,?,?,?,?,?,?)";
+                + " insert into product_detail(product_id, information, image1, image2, image3, image4, image5, accessories, guaranty)"
+                +" values (?,?,?,?,?,?,?,?,?)";
             
             PreparedStatement pst = conn.prepareStatement(sql);
             
@@ -77,9 +77,6 @@ public class addProductDB extends HttpServlet {
             pst.setString(17, img.get(5));
             pst.setString(18, "");
             pst.setString(19, warranty);
-            pst.setInt(20, category_id); 
-            pst.setInt(21, product_id);
-            
             
             sql = pst.toString().split(":")[1];
             String sql1 = sql.split(";")[0];

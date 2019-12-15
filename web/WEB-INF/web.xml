@@ -46,6 +46,7 @@
         <url-pattern>/viewCart</url-pattern>
         <url-pattern>/updateCart</url-pattern>
         <url-pattern>/checkout</url-pattern>
+        <url-pattern>/purchase</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -101,6 +102,9 @@
             <url-pattern>/profile.jsp</url-pattern>
             <url-pattern>/addProduct.jsp</url-pattern>
             <url-pattern>/viewAddProduct.jsp</url-pattern>
+            <url-pattern>/checkout.jsp</url-pattern>
+            <url-pattern>/confirmation.jsp</url-pattern>
+            <url-pattern>/checkOrder.jsp</url-pattern>
             <!-- và các trang khác -->
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
@@ -114,5 +118,9 @@
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
         </jsp-property-group>
     </jsp-config>
-
+    <context-param>
+        <description>The delivery fee</description>
+        <param-name>deliveryFee</param-name>
+        <param-value>5.00</param-value>
+    </context-param>
 </web-app>

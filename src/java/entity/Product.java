@@ -6,8 +6,10 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,12 +17,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -59,7 +63,7 @@ public class Product implements Serializable {
     private double price;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 1000)
     @Column(name = "description")
     private String description;
     @Basic(optional = false)
@@ -87,6 +91,8 @@ public class Product implements Serializable {
     @JoinColumn(name = "Categorycategory_id", referencedColumnName = "category_id")
     @ManyToOne
     private Category categorycategoryid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
+    private Collection<OrderedProduct> orderedProductCollection;
 
     public Product() {
     }
@@ -184,6 +190,15 @@ public class Product implements Serializable {
 
     public void setCategorycategoryid(Category categorycategoryid) {
         this.categorycategoryid = categorycategoryid;
+    }
+
+    @XmlTransient
+    public Collection<OrderedProduct> getOrderedProductCollection() {
+        return orderedProductCollection;
+    }
+
+    public void setOrderedProductCollection(Collection<OrderedProduct> orderedProductCollection) {
+        this.orderedProductCollection = orderedProductCollection;
     }
 
     @Override

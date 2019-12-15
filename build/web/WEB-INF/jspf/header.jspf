@@ -119,9 +119,20 @@
                                 </c:otherwise>
                             </c:choose>
                         </span>
-                    </a>
+                        <!-- check out --> 
+                        <c:if test="${!empty cart && cart.numberOfItems != 0 &&
+                            !fn:contains(pageContext.request.servletPath,'/checkout') &&
+                            requestScope['javax.servlet.forward.servlet_path']ne '/checkout' && 
+                            !fn:contains(pageContext.request.servletPath,'/viewCart') &&
+                            requestScope['javax.servlet.forward.servlet_path'] ne '/viewCart' &&
+                            validationErrorFlag ne true &&
+                            orderFailureFlag ne true}">
+                         
+                            &nbsp;&nbsp;<a href="checkout.jsp"><i class="fas fa-address-book"></i></a>
+                        </c:if>
+                        
+                   
                     </li> 
-
                         <c:choose> 
                             <c:when test = "${(isLogin == null) or (isLogin=='0')}">
                                 <li class="menu-store">

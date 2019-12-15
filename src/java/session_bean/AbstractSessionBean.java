@@ -17,8 +17,10 @@ public abstract class AbstractSessionBean<T> {
         this.entityClass = entityClass;
     }
     protected abstract EntityManager getEntityManager();
-    public void create(T entity) {
+    public T create(T entity) {
         getEntityManager().persist(entity);
+        getEntityManager().flush();
+        return entity;
     }
     public void edit(T entity) {
         getEntityManager().merge(entity);
