@@ -37,6 +37,10 @@
         <servlet-name>search</servlet-name>
         <servlet-class>controller.search</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>deleteOrder</servlet-name>
+        <servlet-class>cart.deleteOrder</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/ControllerServlet</url-pattern>
@@ -47,6 +51,7 @@
         <url-pattern>/updateCart</url-pattern>
         <url-pattern>/checkout</url-pattern>
         <url-pattern>/purchase</url-pattern>
+        <url-pattern>/checkOrder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -71,6 +76,10 @@
     <servlet-mapping>
         <servlet-name>search</servlet-name>
         <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteOrder</servlet-name>
+        <url-pattern>/deleteOrder</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

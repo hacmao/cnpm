@@ -14,12 +14,16 @@ import session_bean.ProductSessionBean;
 import session_bean.ProductDetailSessionBean;
 import session_bean.OrderManager;
 import entity.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.Validator;
 import javax.validation.ConstraintViolation;
+import session_bean.CustomerOrderSessionBean;
+import session_bean.CustomerSessionBean;
+import session_bean.OrderedProductSessionBean;
 
 //@WebServlet(name = "ControllerServlet", urlPatterns = {"/ControllerServlet","/category","/product"})
 
@@ -34,7 +38,13 @@ public class ControllerServlet extends HttpServlet {
     
     @EJB 
     private OrderManager orderManager ;
-    
+    @EJB
+    private CustomerOrderSessionBean customerOrderSB;
+
+    @EJB
+    private OrderedProductSessionBean orderedProductSB;
+    @EJB
+    private CustomerSessionBean customerSB;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -98,6 +108,50 @@ public class ControllerServlet extends HttpServlet {
             String userView = (String) session.getAttribute("view");
             userPath = userView;
         } 
+        else if (userPath.equals("/checkOrder")){
+                List<Customer> customers = customerSB.findAll();
+                List<CustomerOrder> customerOrders = customerOrderSB.findAll(); 
+                
+                List<OrderInfo> orderInfos = new ArrayList<OrderInfo>() ;
+                SimpleDateFormat  df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                int size = customers.size(); 
+                CustomerOrder customerOrder = null;
+                for (int i=0; i < size; i++) {
+                    Customer customer = customers.get(i);
+                    int customerId = customer.getCustomerId();
+                    for (CustomerOrder c : customerOrders){
+                        if(c.getCustomerId().getCustomerId() == customerId){
+                            customerOrder = c;
+                            break;
+                        }
+                    }
+                    
+                    OrderInfo orderInfo = new OrderInfo();
+                    orderInfo.setId(customerId);
+                    orderInfo.setName(customer.getName());
+                    orderInfo.setCcNumber(customer.getCcNumber());
+                    orderInfo.setConfirmationNumber(customerOrder.getConfirmationNumber()); 
+                    orderInfo.setDateCreated(df.format(customerOrder.getDateCreated())); 
+                    List<String> products = new ArrayList<String>();
+                    List<String> amounts = new ArrayList<String>();
+                    
+                    List<OrderedProduct> orderedProducts = orderedProductSB.findByOrderId(customerOrder.getOrderId());
+                    for (OrderedProduct op : orderedProducts) {
+                        Product p = (Product) productSB.find(op.getProductId().getProductId());
+                        products.add(p.getName());
+                        amounts.add(Integer.toString(op.getQuantity()));
+                    }
+                    
+                    orderInfo.setProducts(products);
+                    orderInfo.setAmounts(amounts);
+                    orderInfos.add(orderInfo);
+                    
+                }
+                
+                session.setAttribute("size", size);
+                session.setAttribute("orderInfos", orderInfos);
+
+        }
         
         String url = userPath + ".jsp";
         try {
@@ -180,9 +234,8 @@ public class ControllerServlet extends HttpServlet {
                         userPath = "/confirmation";
                         // otherwise, send back to checkout page and display error
                     }else {
-                            //userPath = "/checkout";
-                            //request.setAttribute("orderFailureFlag", true);
-                            request.getRequestDispatcher("addFail.jsp").forward(request, response);
+                            userPath = "/checkout";
+                            request.setAttribute("orderFailureFlag", true);
                     }
                 }
             }
