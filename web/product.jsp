@@ -5,15 +5,13 @@
 <%@page  import="entity.ProductDetail"%>
 <script src="js/jquery.tools.min.js"></script>
 
-<%
-
-    session.setAttribute("view", "/product");
+<%    session.setAttribute("view", "/product");
 
     Product selectedProduct = (Product) session.getAttribute("selectedProduct");
     ProductDetail selectedProductDetail = (ProductDetail) session.getAttribute("selectedProductDetail");
 %>
- 
- 
+
+
 <div style="padding-left: 80px"> 
     <img src="img/store.jpg" width="20%">
     <br><br><br>
@@ -30,49 +28,49 @@
 
             <div >
                 <div class="mbr-slider slide carousel" data-pause="true" data-keyboard="false" data-ride="carousel"
-                    data-interval="1500">
+                     data-interval="1500">
                     <ol class="carousel-indicators">
                         <c:set var="count" scope="request" value="${1}"/>
                         <c:forEach var="img" items="${selectedProductDetail.getAllImages()}">
                             <c:choose>
                                 <c:when test="${count==1}">
                                     <li data-app-prevent-settings="" data-target="#slider1-5" class=" active"  data-slide-to="${count}"></li>
-                                </c:when>
-                                <c:otherwise>
+                                    </c:when>
+                                    <c:otherwise>
                                     <li data-app-prevent-settings="" data-target="#slider1-5"   data-slide-to="${count}"></li>
-                                </c:otherwise>
-                            </c:choose>
-                            <c:set var="count" scope="request" value="${count+1}" />
-                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:set var="count" scope="request" value="${count+1}" />
+                            </c:forEach>
                     </ol>
                     <div class="carousel-inner" role="listbox">
                         <c:set var="count" scope="request" value="${1}" />
                         <c:forEach var="img" items="${selectedProductDetail.getAllImages()}">
 
-                                <c:choose>
-                                    <c:when test="${count==1}"> 
-                                                <div class="carousel-item slider-fullscreen-image active" data-bg-video-slide="false"
-                                                    style="background-image: url(img/${img}>);">
-                                                    <div class="container container-slide">
-                                                        <div class="image_wrapper">
-                                                            <div class="mbr-overlay"></div><img src="img/${img}" alt="" >
-                                                        </div>
-                                                    </div>
-                                                </div>
+                            <c:choose>
+                                <c:when test="${count==1}"> 
+                                    <div class="carousel-item slider-fullscreen-image active" data-bg-video-slide="false"
+                                         style="background-image: url(img/${img}>);">
+                                        <div class="container container-slide">
+                                            <div class="image_wrapper">
+                                                <div class="mbr-overlay"></div><img src="img/${img}" alt="" >
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    </c:when> 
-                                    <c:otherwise>
-                                                <div class="carousel-item slider-fullscreen-image" data-bg-video-slide="false"
-                                                    style="background-image: url(img/${img}>);">
-                                                    <div class="container container-slide">
-                                                        <div class="image_wrapper">
-                                                            <div class="mbr-overlay"></div><img src="img/${img}" alt="" >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                    </c:otherwise>
-                                </c:choose> 
-                                <c:set var="count" scope="request" value="${count+1}" />
+                                </c:when> 
+                                <c:otherwise>
+                                    <div class="carousel-item slider-fullscreen-image" data-bg-video-slide="false"
+                                         style="background-image: url(img/${img}>);">
+                                        <div class="container container-slide">
+                                            <div class="image_wrapper">
+                                                <div class="mbr-overlay"></div><img src="img/${img}" alt="" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose> 
+                            <c:set var="count" scope="request" value="${count+1}" />
                         </c:forEach> 
                     </div>
                 </div>
@@ -82,11 +80,11 @@
 
         <!--<ul>
             
-                <% for (String img : selectedProductDetail.getAllImages()) { %>
-                    <li><a title="amazing shop" href="img/<%=img%>" class="portfolio-item-preview" data- rel="prettyPhoto"><img src="img/tn-<%=img%>" width="60" height="60" alt="" class="portfolio-img pretty-box"/></a></li>
-                <% } %>
-        </ul> -->
-        
+        <% for (String img : selectedProductDetail.getAllImages()) {%>
+            <li><a title="amazing shop" href="img/<%=img%>" class="portfolio-item-preview" data- rel="prettyPhoto"><img src="img/tn-<%=img%>" width="60" height="60" alt="" class="portfolio-img pretty-box"/></a></li>
+        <% }%>
+</ul> -->
+
     </div>
     <div class="one-half last">
         <ul id="tabify_menu" class="menu_tab" style="margin: 0;">
@@ -96,10 +94,25 @@
             <i class="fas fa-align-left"></i>
             <span style="font-size: 25px">Technical Details</span>
             <p align="justify"><%=selectedProductDetail.getInformation()%></p>
-            
+
             <i class="fas fa-align-left"></i>
             <span style="font-size: 25px">Warranty</span>
             <p><%=selectedProductDetail.getGuaranty()%></p>
+            <c:choose>
+                <c:when test="${selectedProductDetail.getQuantity() != 0}">
+                    <i class="fas fa-align-left"></i>
+                    <span style="font-size: 25px">Product Left</span>
+                    <p><%=selectedProductDetail.getQuantity()%> items</p>
+                </c:when>
+                <c:otherwise>
+                    <i class="fas fa-align-left"></i>
+                    <span style="font-size: 25px">Product Left</span>
+                    <br><span style="color:red">Sold out<br></span><br>
+                </c:otherwise>
+            </c:choose>
+            <i class="fas fa-align-left"></i>
+            <span style="font-size: 25px">Product Selled</span>
+            <p><%=selectedProductDetail.getNumSelled()%> items</p>
             
             <i class="fas fa-align-left"></i>
             <span style="font-size: 25px">Price</span>

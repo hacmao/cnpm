@@ -4,8 +4,13 @@
  * and open the template in the editor.
  */
 package session_bean;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
+import javax.ejb.*;
+import javax.validation.*;
+import javax.validation.ValidatorFactory;
+import javax.validation.Validator;
+
 /**
  *
  * @author DELL
@@ -17,13 +22,40 @@ public abstract class AbstractSessionBean<T> {
         this.entityClass = entityClass;
     }
     protected abstract EntityManager getEntityManager();
+    
+    private boolean constraintValidationsDetected(T entity) {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+    Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity);
+    if (constraintViolations.size() > 0) {
+      Iterator<ConstraintViolation<T>> iterator = constraintViolations.iterator();
+      while (iterator.hasNext()) {
+        ConstraintViolation<T> cv = iterator.next();
+        System.err.println(cv.getRootBeanClass().getName() + "." + cv.getPropertyPath() + " " + cv.getMessage());
+
+       
+      }
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+    
     public T create(T entity) {
         getEntityManager().persist(entity);
         getEntityManager().flush();
         return entity;
     }
-    public void edit(T entity) {
-        getEntityManager().merge(entity);
+    
+
+    public T edit(T entity) {
+        //if (!constraintValidationsDetected(entity)) {
+            return getEntityManager().merge(entity);
+        //}
+        //else {
+        // return entity;
+        //}
     }
     public void remove(T entity) {
         getEntityManager().remove(getEntityManager().merge(entity));

@@ -19,6 +19,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Add Fail</title>
     </head>
+    
+    
     <body>
         ${sql}
         <h1>Add Fail</h1>

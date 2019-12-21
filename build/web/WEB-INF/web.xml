@@ -52,6 +52,7 @@
         <url-pattern>/checkout</url-pattern>
         <url-pattern>/purchase</url-pattern>
         <url-pattern>/checkOrder</url-pattern>
+        <url-pattern>/updateProfile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>

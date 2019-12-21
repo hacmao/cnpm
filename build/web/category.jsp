@@ -43,7 +43,7 @@
 
                                         <p>
 
-                                        <a title="<%=p.getName()%>" href="img/<%=p.getImage()%>" class="portfolio-item-preview" data- rel="prettyPhoto">
+                                        <a title="<%=p.getName()%>" href="product?<%=p.getProductId()%>" >
                                             <img src="img/<%=p.getImage()%>" alt="" width="250" height="250" class="portfolio-img pretty-box">
 
                                         </a>
@@ -58,13 +58,14 @@
                                             }
                                             else {
                                                 des = p.getDescription(); 
-                                                des += "<br><br><br><br>";
+                                                des += "";
                                             } %>
                                         <p align="justify"><%=des%></p>
                                         
                                         
                                         <div class="mbr-section-btn" buttons="0" style="text-align: center; ">
-                                            <a class="btn btn-primary display-3" href="product?<%=p.getProductId()%>" class="button_small white">See Details &raquo;</a>
+                                            <a class="btn btn-primary display-3" href="addToCart?<%=p.getProductId()%>" class="button_small white">Buy &raquo;</a>
+                                            
                                         </div>
                                         
                                      

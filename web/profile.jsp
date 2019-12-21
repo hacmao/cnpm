@@ -1,134 +1,76 @@
-<%-- 
-    Document   : profile.jsp
-    Created on : Dec 11, 2019, 8:32:21 PM
-    Author     : DELL
---%>
 <c:set var='view' value='/profile' scope='session' />
+<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
 <style>
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
-  margin: auto;
-  text-align: center;
-  font-family: arial;
-  color : #FFF;
-}
-
-.title {
-  color: grey;
-  font-size: 24px;
-}
-
-button {
-  border: none;
-  outline: 0;
-  display: inline-block;
-  padding: 8px;
-  color: white;
-  background-color: #000;
-  text-align: center;
-  cursor: pointer;
-  width: 50%;
-  font-size: 18px;
-}
-
-a {
-  text-decoration: none;
-  font-size: 22px;
-  color: black;
-}
-
-button:hover, a:hover {
-  opacity: 0.7;
-}
-h1 {
-  text-align: center;
-  text-transform: uppercase;
-  color: #4CAF50;
-}
-
-
-body {
-  background-color: #222;
-}
-.plate {
-  width: 410px;
-  margin: 10% auto;
-}
-.shadow {
-  color: #fff;
-  font-family: Arvo;
-  font-weight: bold;
-  text-shadow:
-    -3px -3px 0 #222,
-    3px -3px 0 #222,
-    -3px 3px 0 #222,
-    3px 3px 0 #222,
-    4px 4px 0 #fff,
-    5px 5px 0 #fff,
-    6px 6px 0 #fff,
-    7px 7px 0 #fff;
-  line-height: 0.8em;
-  letter-spacing: 0.1em;
-  transform: scaleY(0.7);
-  -webkit-transform: scaleY(0.7);
-  -moz-transform: scaleY(0.7);
-  margin:0;
-  text-align: center;
-}
-.script {
-  font-family: "Seaweed Script";
-  color: #fff;
-  text-align: center;
-  font-size: 40px;
-  position: relative;
-  margin:0;
-}
-.script span {
-  background-color: #222;
-  padding: 0 0.3em;
-}
-.script:before {
-  content:"";
-  display: block;
-  position: absolute;
-  z-index:-1;
-  top: 50%;
-  width: 100%;
-  border-bottom: 3px solid #fff;
-}
-.text1 {
-  font-size: 60px;
-}
-.text2 {
-  font-size: 169px;
-}
-.text3 {
-  font-size: 80px;
-}
-
+    article, aside, figure, footer, header, hgroup, 
+    menu, nav, section { display: block; }
 </style>
-<div id="container" > 
 
-        <p class="shadow text3">PROFILER</p>
-        <br><br> 
+<div style="padding-left: 80px"> 
+    <img src="img/store.jpg" width="20%">
+    <div style="padding-bottom: 20px"></div>
+    <div class="one">
+        <div class="heading_bg">
+            <h2>Profiler</h2><hr>
+        </div>
+    </div><br><br><br><br>
+
+    <form action="updateProfile" method="post" enctype="multipart/form-data">
+        <div class="one-half" width="60%">
+            <c:choose>
+                <c:when test="${user == null or user.getImg() == null}">
+                    <img src="img/none.jpg" id="blah" width="300" height="300"><br><br>
+                    <input type='file' onchange="readURL(this)" name="img" id="Myname1" />
+                </c:when>
+                <c:otherwise>
+                    <img name="img" id="blah" src="img/user/${user.getImg()}" width="300" height="300"><br><br>
+                    <input type='file' onchange="readURL(this);" name="img" id="Myname1"/>
+                </c:otherwise>
+            </c:choose><br>
+        </div>
+        <div class="one-half last" style="width: 50%">
+            <strong>Name : </strong><br>
+            <span><input type="text" name="username" value= "${user.getName()}"></span><br>
+
+            <strong>Password : </strong><br>
+            <input type="password" name="password" value="${user.getPassword()}"><br>
+            <strong> Information : </strong><br>
+            <span> <textarea cols="40" rows="5" name="info" placeholder="${user.getInfo()}"></textarea></span><br><br>
+            <input type="submit" value="Update">
+        </div>
+    </form>
     
-    <div class="card" style="background-color: #FFF">
-        <img src="img/logo.png" alt="John" style="width:100%"><br>
-        <h1>${name}</h1><br>
-        <p class="title" >CEO & Founder</p>
-        <p style="color: #000; size: 22px">HUST</p> 
-        <c:choose>
-            <c:when test="${isLogin == 1}">
-                <a href="addProduct.jsp"><p><button>Add Product</button></p></a>
-                <a href="checkOrder"><p><button>Check order</button></p></a>
-            </c:when>
-        </c:choose>
-        
-    </div>
-        <br>
-    
+    <div style="padding-bottom: 400px; padding-left: 80px"></div>            
+            <hr>
+    <c:if test="${isLogin=='1'}">
+        <strong>Admin functions : </strong><br>
+        <a href="addProduct.jsp"><button> Add product</button></a>
+        <a href="#"><button> Delete Product</button></a>
+        <a href="checkOrder"><button> Check Order</button></a> 
+    </c:if>
+    <c:if test="${isLogin=='2'}">
+        <strong>User functions : </strong><br>
+        <a href="#"><button> Check Order</button></a>
+    </c:if>    
+
+
 </div>
 
+<div style="padding-bottom: 100px"></div>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
 
+            reader.onload = function (e) {
+                $('#blah')
+                        .attr('src', e.target.result)
+                        .width(300)
+                        .height(300);
+            };
 
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

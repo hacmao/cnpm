@@ -9,10 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import session_bean.CategorySessionBean;
-import session_bean.ProductSessionBean;
-import session_bean.ProductDetailSessionBean;
-import session_bean.OrderManager;
+import session_bean.*;
 import entity.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,9 +21,20 @@ import javax.validation.ConstraintViolation;
 import session_bean.CustomerOrderSessionBean;
 import session_bean.CustomerSessionBean;
 import session_bean.OrderedProductSessionBean;
+import java.nio.file.Files;
+import java.nio.file.*;
+import java.io.*;
+import javax.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.annotation.MultipartConfig;
+import javax.naming.*;
+import java.sql.*;
+import javax.sql.*;
+import javax.servlet.*;
+
 
 //@WebServlet(name = "ControllerServlet", urlPatterns = {"/ControllerServlet","/category","/product"})
-
+@MultipartConfig
 public class ControllerServlet extends HttpServlet {
 
     @EJB
@@ -45,6 +53,12 @@ public class ControllerServlet extends HttpServlet {
     private OrderedProductSessionBean orderedProductSB;
     @EJB
     private CustomerSessionBean customerSB;
+    
+    @EJB 
+    private UserSessionBean userSB;
+    
+    private String previewPath = "img\\user\\";
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -101,9 +115,15 @@ public class ControllerServlet extends HttpServlet {
             // get user input from request
             String productId = request.getQueryString();
             if (!productId.isEmpty()) {
-                Product product =
-                productSB.find(Integer.parseInt(productId));
-                cart.addItem(product);
+                Product product = productSB.find(Integer.parseInt(productId));
+                ProductDetail productDetail = productDetailSB.find(Integer.parseInt(productId));
+                if (productDetail.getQuantity() != 0) {
+                    cart.addItem(product);
+                    
+                }
+                session.setAttribute("selectedProduct", product);
+                session.setAttribute("selectedProductDetail", productDetail);
+                request.getRequestDispatcher("product.jsp").forward(request, response);    // check quantity
             }
             String userView = (String) session.getAttribute("view");
             userPath = userView;
@@ -173,9 +193,17 @@ public class ControllerServlet extends HttpServlet {
         Validator validator = factory.getValidator();
         if (userPath.equals("/updateCart")) {
             int productId = Integer.parseInt(request.getParameter("productId"));
-            String quantity = request.getParameter("quantity");
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            ProductDetail productDetail = productDetailSB.find(productId);
+            System.err.println(quantity);
+            if (quantity <= productDetail.getQuantity()) {
+                cart.update(productId, Integer.toString(quantity));
+                session.setAttribute("errId", 0);
+            }
+            else{
+                session.setAttribute("errId", productId);
+            }
             
-            cart.update(productId, quantity);
             try {
                 request.getRequestDispatcher("viewCart.jsp").forward(request, response);
             } catch (Exception ex) {
@@ -184,6 +212,28 @@ public class ControllerServlet extends HttpServlet {
         }
         
         else if (userPath.equals("/purchase")) {
+            session.setAttribute("isCheckout", "1");
+            String isLogin = (String) session.getAttribute("isLogin");
+            if (isLogin == "0" || isLogin == null) {
+                Form form = new Form();
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                String phone = request.getParameter("phone");
+                String address = request.getParameter("address");
+                String cityRegion = request.getParameter("cityRegion");
+                String ccNumber = request.getParameter("creditcard");
+
+                form.setName(name);
+                form.setEmail(email);
+                form.setPhone(phone);
+                form.setAddress(address);
+                form.setCityRegion(cityRegion);
+                form.setCcNumber(ccNumber);
+                
+                session.setAttribute("form", form);
+                request.getRequestDispatcher("login/login.jsp").forward(request, response);
+                return;
+            }
             if (cart != null) {
                 Form form = new Form();
                 String name = request.getParameter("name");
@@ -217,9 +267,10 @@ public class ControllerServlet extends HttpServlet {
                             language = (String) locale.getLanguage();
                         }
                         // dissociate shopping cart from session
-                        cart = null;
+                        cart.clear();
+                        session.setAttribute("cart", cart);
                         // end session
-                        session.invalidate();
+                        //session.invalidate();
                         if (!language.isEmpty()) { //if user changed language using the toggle,
                             // reset the language attribute - otherwise
                             request.setAttribute("language", language); // language will be switched on confirmation page!
@@ -227,10 +278,24 @@ public class ControllerServlet extends HttpServlet {
                         // get order details
                         Map orderMap = orderManager.getOrderDetails(orderId);
                         // place order details in request scope
+                        // subtract quantity product left in database
+                        List<Product> products = (List<Product>) orderMap.get("products");
+                        List<OrderedProduct> orderedProducts = (List<OrderedProduct>) orderMap.get("orderedProducts");
+                        int i = 0; 
+                        for (Product p : products) {
+                            int id = p.getProductId();
+                            ProductDetail pd = productDetailSB.find(id);
+                            int quantity = orderedProducts.get(i).getQuantity() ;
+                            pd.setQuantity(pd.getQuantity() - quantity); 
+                            pd.setNumSelled(pd.getNumSelled() + quantity);
+                            productDetailSB.edit(pd);
+                        } 
+
+                        
                         request.setAttribute("customer", orderMap.get("customer"));
-                        request.setAttribute("products", orderMap.get("products"));
+                        request.setAttribute("products", products);
                         request.setAttribute("orderRecord", orderMap.get("orderRecord"));
-                        request.setAttribute("orderedProducts", orderMap.get("orderedProducts"));
+                        request.setAttribute("orderedProducts", orderedProducts);
                         userPath = "/confirmation";
                         // otherwise, send back to checkout page and display error
                     }else {
@@ -240,6 +305,45 @@ public class ControllerServlet extends HttpServlet {
                 }
             }
         }
+        
+        else if (userPath.equals("/updateProfile")){
+            User user = (User) session.getAttribute("user");
+            user.setName(request.getParameter("username"));
+            user.setInfo(request.getParameter("info"));
+            user.setPassword(request.getParameter("password"));
+            
+
+            String appPath = request.getServletContext().getRealPath("");
+            if (!appPath.endsWith("\\"))
+                appPath = appPath + "\\";
+            String fullSavePath = null;
+            fullSavePath = appPath + previewPath;
+            File fileSaveDir = new File(fullSavePath);
+            if (!fileSaveDir.exists()) {
+                fileSaveDir.mkdir();
+            }
+
+            List<String> list = new ArrayList<>();
+            for (Part path : request.getParts()) {
+                String fileName = extractFileName(path);
+                if (fileName != null && fileName.length() > 0) {
+                    list.add(fileName);
+                    String filePath = fullSavePath + File.separator + fileName;
+                    InputStream is = path.getInputStream();
+                    Files.copy(is, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+                    break;
+                    //path.write(filePath);
+                }
+            }
+            if (list.size() > 0)
+                user.setImg(list.get(0));
+            System.err.println(list);
+            userSB.edit(user);
+            session.setAttribute("user", user);
+            request.getRequestDispatcher("profile.jsp").forward(request, response);
+        }
+        
+        
         String url = userPath + ".jsp";
         try {
             request.getRequestDispatcher(url).forward(request, response);
@@ -247,6 +351,19 @@ public class ControllerServlet extends HttpServlet {
         catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                String clientFileName = s.substring(s.indexOf("=") + 2, s.length() - 1);
+                int i = clientFileName.lastIndexOf('\\');
+                return clientFileName.substring(i + 1);
+            }
+        }
+        return null;
     }
 }
 

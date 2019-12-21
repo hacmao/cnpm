@@ -48,7 +48,7 @@ public class signUp extends HttpServlet {
             ResultSet rs = sttm.executeQuery(sql);
             rs.next();
             if (rs.getInt("numRow") == 0) {             // if name is not exist in database, add 
-                sql = "insert into user values (\"" + name + "\", \"" + password + "\");"; 
+                sql = "insert into user (name, password) values (\"" + name + "\", \"" + password + "\");"; 
                 sttm = conn.createStatement();
                 sttm.executeUpdate(sql);
             }

@@ -2,8 +2,7 @@
     <div class="one" style="padding-left: 20px">
 
         <h2>Confirmation</h2>
-
-        <p id="confirmationText" style="background-color: #e2e1eb">
+        <p id="confirmationText" style="background-color: #e2e1eb; padding-left: 40px">
             <strong>Your order has been successful processed and will be delivery within 24 hours.</strong>
             <br />
             <br /> Please keep note of your confirmation number :
@@ -12,9 +11,9 @@
             <br><br> Thank you for your shopping at Apple Store! See you soon!
         </p>
     </div>
-    <div class="two-third">
+    <div class="two-third" style="width: 50%">
         <div class="heading_bg">
-            Order Summary
+            <h2>Order Summary</h2>
         </div>
         <table>
             <th>PRODUCT</th>
@@ -50,10 +49,10 @@
             </tr>
         </table>
     </div>
-    <div class="sidebar_right">
+    <div class="two-third last" style="padding-right:40px;width: 30%">
         <div class="heading_bg">
             <h3>
-                <fmt:message key="deliveryAddress" />
+                Delivery Address
             </h3>
         </div>
         <table>
@@ -62,15 +61,16 @@
                     ${customer.name}
                     <br> ${customer.address}
                     <br>
-                    <fmt:message key="city" /> ${customer.cityRegion}
+                    city ${customer.cityRegion}
                     <br>
                     <hr>
-                    <strong><fmt:message key="email"/>:</strong> ${customer.email}
+                    <strong>Email :</strong> ${customer.email}
                     <br>
-                    <strong><fmt:message key="phone"/>:</strong> ${customer.phone}
+                    <strong>Phone:</strong> ${customer.phone}
                 </td>
             </tr>
         </table>
     </div>
     <div style="clear:both; height: 40px"></div>
 </div>
+                <div style="padding-bottom: 100px"></div>

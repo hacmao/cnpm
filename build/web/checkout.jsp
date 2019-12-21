@@ -43,27 +43,27 @@
         <form id="checkoutForm" action="<c:url value='purchase' />" method="post">
             <fieldset>
                 <label>Name<span class="required">*</span></label>
-                <input type="text" name="name" id="name" value="${param.name}" />
+                <input type="text" name="name" id="name" value="${form.name}" />
             </fieldset>
             <fieldset>
                 <label>Email<span class="required">*</span></label>
-                <input type="text" name="email" id="email" value="${param.email}" />
+                <input type="text" name="email" id="email" value="${form.email}" />
             </fieldset>
             <fieldset>
                 <label>Phone <span class="required">*</span></label>
-                <input type="text" name="phone" id="phone" value="${param.phone}" />
+                <input type="text" name="phone" id="phone" value="${form.phone}" />
             </fieldset>
             <fieldset>
                 <label>Address <span class="required">*</span></label>
-                <input type="text" size="45" name="address" id="address" value="${param.address}" />
+                <input type="text" size="45" name="address" id="address" value="${form.address}" />
             </fieldset>
             <fieldset>
                 <label>City <span class="required">*</span></label>
-                <input type="text" size="45" name="cityRegion" id="cityRegion" value="${param.cityRegion}" />
+                <input type="text" size="45" name="cityRegion" id="cityRegion" value="${form.cityRegion}" />
             </fieldset>
             <fieldset>
                 <label>Credit Card Number<span class="required">*</span></label>
-                <input type="text" size="45" name="creditcard" id="creditcard" value="${param.creditcard}" />
+                <input type="text" size="45" name="creditcard" id="creditcard" value="${form.ccNumber}" />
             </fieldset>
             <fieldset><br>
                 <input value="Submit purchase" class="button white" type="submit">

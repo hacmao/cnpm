@@ -36,7 +36,7 @@ import javax.naming.*;
 * @author ThanDieu
 */
 @Stateless
-@TransactionManagement(TransactionManagementType.CONTAINER)
+
 public class OrderManager {
     @EJB
     private CustomerOrderSessionBean customerOrderSB;
@@ -51,7 +51,7 @@ public class OrderManager {
     private EntityManager em;
     @Resource
     private SessionContext context;
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+
     public int placeOrder(String name, String email, String phone, String address, 
             String cityRegion, String ccNumber, ShoppingCart cart) {
         try {
@@ -60,7 +60,6 @@ public class OrderManager {
             addOrderedItems(order, cart);
             return order.getOrderId();
         } catch (Exception e) {
-            context.setRollbackOnly();
             e.printStackTrace();
             return 0;
         }

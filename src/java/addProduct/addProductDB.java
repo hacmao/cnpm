@@ -89,14 +89,16 @@ public class addProductDB extends HttpServlet {
             sttm.executeUpdate(sql1);
             session.setAttribute("sql", sql1 + "---" + sql2);
             sttm.executeUpdate(sql2);
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            System.err.println(sql);
+            sttm.close();
+            
             
         } catch (SQLException | NamingException ex) {
             
             request.getRequestDispatcher("/addFail.jsp").forward(request, response);
             System.err.println(ex);
         }
-        
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
 

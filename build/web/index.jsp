@@ -74,7 +74,7 @@
                                 <div class="carousel-caption justify-content-center">
                                     <div class="col-10 align-center">
                                         <h2 class="mbr-fonts-style display-1">${product.getName()}</h2>
-                                        <p class="lead mbr-text mbr-fonts-style display-5">${product.getDescription()}</p>
+                                        <p class="lead mbr-text mbr-fonts-style display-5"></p>
                                         <div class="mbr-section-btn" buttons="0"><a class="btn btn-success display-4" href="product?${product.productId}">MORE INFO</a> <a class="btn  btn-white-outline display-4" href="addToCart?${product.productId}">BUY NOW</a></div>
                                     </div>
                                 </div>

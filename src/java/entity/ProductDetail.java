@@ -36,7 +36,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ProductDetail.findByImage4", query = "SELECT p FROM ProductDetail p WHERE p.image4 = :image4")
     , @NamedQuery(name = "ProductDetail.findByImage5", query = "SELECT p FROM ProductDetail p WHERE p.image5 = :image5")
     , @NamedQuery(name = "ProductDetail.findByAccessories", query = "SELECT p FROM ProductDetail p WHERE p.accessories = :accessories")
-    , @NamedQuery(name = "ProductDetail.findByGuaranty", query = "SELECT p FROM ProductDetail p WHERE p.guaranty = :guaranty")})
+    , @NamedQuery(name = "ProductDetail.findByGuaranty", query = "SELECT p FROM ProductDetail p WHERE p.guaranty = :guaranty")
+    , @NamedQuery(name = "ProductDetail.findByQuantity", query = "SELECT p FROM ProductDetail p WHERE p.quantity = :quantity")
+    , @NamedQuery(name = "ProductDetail.findByNumSelled", query = "SELECT p FROM ProductDetail p WHERE p.numSelled = :numSelled")})
 public class ProductDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,41 +52,31 @@ public class ProductDetail implements Serializable {
     @Size(min = 1, max = 1000)
     @Column(name = "information")
     private String information;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "image1")
     private String image1;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "image2")
     private String image2;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "image3")
     private String image3;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "image4")
     private String image4;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "image5")
     private String image5;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2000)
+    @Size(max = 2000)
     @Column(name = "accessories")
     private String accessories;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2000)
+    @Size(max = 2000)
     @Column(name = "guaranty")
     private String guaranty;
+    @Column(name = "quantity")
+    private Integer quantity;
+    @Column(name = "numSelled")
+    private Integer numSelled;
 
     public ProductDetail() {
     }
@@ -93,16 +85,9 @@ public class ProductDetail implements Serializable {
         this.productId = productId;
     }
 
-    public ProductDetail(Integer productId, String information, String image1, String image2, String image3, String image4, String image5, String accessories, String guaranty) {
+    public ProductDetail(Integer productId, String information) {
         this.productId = productId;
         this.information = information;
-        this.image1 = image1;
-        this.image2 = image2;
-        this.image3 = image3;
-        this.image4 = image4;
-        this.image5 = image5;
-        this.accessories = accessories;
-        this.guaranty = guaranty;
     }
 
     public Integer getProductId() {
@@ -161,6 +146,16 @@ public class ProductDetail implements Serializable {
         this.image5 = image5;
     }
 
+    public List<String> getAllImages(){
+        List<String> images = new ArrayList<String>();
+        if (image1 != "" && image1 != null) images.add(image1);
+        if (image2 != "" && image2 != null) images.add(image2);
+        if (image3 != "" && image3 != null) images.add(image3);
+        if (image4 != "" && image4 != null) images.add(image4);
+        if (image5 != "" && image5 != null) images.add(image5);
+        return images;
+    }
+    
     public String getAccessories() {
         return accessories;
     }
@@ -175,6 +170,22 @@ public class ProductDetail implements Serializable {
 
     public void setGuaranty(String guaranty) {
         this.guaranty = guaranty;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getNumSelled() {
+        return numSelled;
+    }
+
+    public void setNumSelled(Integer numSelled) {
+        this.numSelled = numSelled;
     }
 
     @Override
@@ -201,13 +212,5 @@ public class ProductDetail implements Serializable {
     public String toString() {
         return "entity.ProductDetail[ productId=" + productId + " ]";
     }
-    public List<String> getAllImages(){
-        List<String> images = new ArrayList<String>();
-        if (!image1.equals("")) images.add(image1);
-        if (!image2.equals("")) images.add(image2);
-        if (!image3.equals("")) images.add(image3);
-        if (!image4.equals("")) images.add(image4);
-        if (!image5.equals("")) images.add(image5);
-        return images;
-    }
+    
 }

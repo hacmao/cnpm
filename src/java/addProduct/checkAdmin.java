@@ -5,6 +5,7 @@
  */
 package addProduct;
 
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -38,14 +39,19 @@ public class checkAdmin extends HttpServlet {
             DataSource ds = (DataSource) envContext.lookup("jdbc/lab8"); 
             Connection conn = ds.getConnection();
             Statement sttm = conn.createStatement( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            String sql = "select COUNT(*) as numRow from user where name=\"" + name + "\" and password=\"" + password + "\""; 
+            String sql = "select * from user where name=\"" + name + "\" and password=\"" + password + "\""; 
             
             ResultSet rs = sttm.executeQuery(sql);
-            rs.next();
-            if (rs.getInt("numRow") == 0) {
+            if (!rs.next()) {
                 session.setAttribute("isLogin", "0"); 
             }
             else {
+                User user = new User();
+                user.setName(name);
+                user.setPassword(password);
+                user.setImg(rs.getString("img"));
+                user.setInfo(rs.getString("info"));
+                session.setAttribute("user", user);
                 if (name.equals("admin")) {
                     session.setAttribute("isLogin", "1"); 
                 } 
@@ -58,6 +64,13 @@ public class checkAdmin extends HttpServlet {
         }
         session.setAttribute("name", name);
         session.setAttribute("password", password);
+        String checkout = (String) session.getAttribute("isCheckout");
+        System.err.println(checkout);
+        if (checkout != null) {
+            
+            response.sendRedirect("checkout.jsp");
+            return;
+        }
         request.getRequestDispatcher("index.jsp").forward(request, response);
 
     }

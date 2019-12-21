@@ -136,7 +136,7 @@
                         <c:choose> 
                             <c:when test = "${(isLogin == null) or (isLogin=='0')}">
                                 <li class="menu-store">
-                                    <a href="login/login.html">
+                                    <a href="login/login.jsp">
                                         <i class="fas fa-address-card"></i>
                                     </a>
                                 </li>
