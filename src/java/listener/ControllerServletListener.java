@@ -5,12 +5,15 @@
  */
 package listener;
 
+import entity.*;
 import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import session_bean.CategorySessionBean;
 import session_bean.ProductSessionBean;
+import java.util.*;
+import session_bean.ProductDetailSessionBean;
 
 /**
  * Web application lifecycle listener.
@@ -22,13 +25,25 @@ public class ControllerServletListener implements ServletContextListener {
     ProductSessionBean productSessionBean;
     @EJB
     CategorySessionBean categorySessionBean;
-    
+    @EJB 
+    ProductDetailSessionBean productDetailSessionBean;
     ServletContext context;
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         context = sce.getServletContext();
-        context.setAttribute("newProducts", productSessionBean.findRange(new int[] {0,5}));
+        
+        List<Product> products = productSessionBean.findAll();
+        int size = products.size();
+        List<ProductDetail> productDetails = productDetailSessionBean.findAll();
+        Collections.sort(productDetails, Comparator.comparing(ProductDetail::getNumSelled)); 
+        List<Product> bestProducts = new ArrayList<Product>();
+        for (int i=0;i < 5; i++) {
+            bestProducts.add(productSessionBean.find(productDetails.get(size - i - 1).getProductId()));
+        }
+        
+        context.setAttribute("bestProducts", bestProducts);
+        context.setAttribute("newProducts", products.subList(size - 5, size ));
         context.setAttribute("categories", categorySessionBean.findRange(new int[] {0,5}));
     }
 

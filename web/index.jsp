@@ -38,14 +38,13 @@
     </div>
 </section>
 
-
 <section class="carousel slide cid-rKpgbVPIfa" data-interval="false" id="slider1-5">
     <div class="full-screen">
         <div class="mbr-slider slide carousel" data-pause="true" data-keyboard="false" data-interval="4000">
             <ol class="carousel-indicators">
                 <li data-app-prevent-settings="" data-target="#slider1-5" class=" active" data-slide-to="1"></li>
                 <c:set var="countProduct" scope="request" value="${2}" />
-                <c:forEach var="product" items="${newProducts}">
+                <c:forEach var="product" items="${bestProducts}">
                     <li data-app-prevent-settings="" data-target="#slider1-5" data-slide-to="${countProduct}"></li>
                     <c:set var="countProduct" scope="request" value="${countProduct+1}" />
                 </c:forEach>
@@ -58,6 +57,57 @@
                             <div class="carousel-caption justify-content-center">
                                 <div class="col-10 align-center">
                                     <h2 class="mbr-fonts-style display-1">OUR BEST SELLER</h2>
+                                    <p class="lead mbr-text mbr-fonts-style display-5">The goal of Apple is not to make money but to make really nice products, really great products</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <c:forEach var="product" items="${bestProducts}">
+                    <div class="carousel-item slider-fullscreen-image" data-bg-video-slide="false" style="background-image: url(${initParam.imgProductPath}${product.getImage()});">
+                        <div class="container container-slide">
+                            <div class="image_wrapper" style="width: 100%">
+                                <div class="mbr-overlay"></div><img src="${initParam.imgProductPath}${product.getImage()}" alt="" title="">
+                                <div class="carousel-caption justify-content-center">
+                                    <div class="col-10 align-center">
+                                        <h2 class="mbr-fonts-style display-1">${product.getName()}</h2>
+                                        <p class="lead mbr-text mbr-fonts-style display-5"></p>
+                                        <div class="mbr-section-btn" buttons="0"><a class="btn btn-success display-4" href="product?${product.productId}">MORE INFO</a> <a class="btn  btn-white-outline display-4" href="addToCart?${product.productId}">BUY NOW</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+
+            </div>
+            <a data-app-prevent-settings="" class="carousel-control carousel-control-prev" role="button" data-slide="prev" href="#slider1-5"><span aria-hidden="true" class="mbri-left mbr-iconfont"></span><span class="sr-only">Previous</span></a>
+            <a data-app-prevent-settings="" class="carousel-control carousel-control-next" role="button" data-slide="next" href="#slider1-5"><span aria-hidden="true" class="mbri-right mbr-iconfont"></span><span class="sr-only">Next</span></a>
+        </div>
+    </div>
+
+</section>
+<section class="carousel slide cid-rKpgbVPIfa" data-interval="false" id="slider2-5">
+    <div class="full-screen">
+        <div class="mbr-slider slide carousel" data-pause="true" data-keyboard="false" data-interval="4000">
+            <ol class="carousel-indicators">
+                <li data-app-prevent-settings="" data-target="#slider2-5" class=" active" data-slide-to="1"></li>
+                <c:set var="countProduct" scope="request" value="${2}" />
+                <c:forEach var="product" items="${newProducts}">
+                    <li data-app-prevent-settings="" data-target="#slider2-5" data-slide-to="${countProduct}"></li>
+                    <c:set var="countProduct" scope="request" value="${countProduct+1}" />
+                </c:forEach>
+            </ol>
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item slider-fullscreen-image active" data-bg-video-slide="false" style="background-image: url(assets/images/background3.jpg);">
+                    <div class="container container-slide">
+                        <div class="image_wrapper">
+                            <div class="mbr-overlay" style="opacity: 0.4;"></div><img src="assets/images/background3.jpg" alt="" title="">
+                            <div class="carousel-caption justify-content-center">
+                                <div class="col-10 align-center">
+                                    <h2 class="mbr-fonts-style display-1">OUR NEWEST PRODUCT</h2>
                                     <p class="lead mbr-text mbr-fonts-style display-5">The goal of Apple is not to make money but to make really nice products, really great products</p>
 
                                 </div>
@@ -84,8 +134,8 @@
                 </c:forEach>
 
             </div>
-            <a data-app-prevent-settings="" class="carousel-control carousel-control-prev" role="button" data-slide="prev" href="#slider1-5"><span aria-hidden="true" class="mbri-left mbr-iconfont"></span><span class="sr-only">Previous</span></a>
-            <a data-app-prevent-settings="" class="carousel-control carousel-control-next" role="button" data-slide="next" href="#slider1-5"><span aria-hidden="true" class="mbri-right mbr-iconfont"></span><span class="sr-only">Next</span></a>
+            <a data-app-prevent-settings="" class="carousel-control carousel-control-prev" role="button" data-slide="prev" href="#slider2-5"><span aria-hidden="true" class="mbri-left mbr-iconfont"></span><span class="sr-only">Previous</span></a>
+            <a data-app-prevent-settings="" class="carousel-control carousel-control-next" role="button" data-slide="next" href="#slider2-5"><span aria-hidden="true" class="mbri-right mbr-iconfont"></span><span class="sr-only">Next</span></a>
         </div>
     </div>
 

@@ -17,6 +17,16 @@ import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.file.*;
 import javax.servlet.annotation.MultipartConfig;
+import java.io.IOException;
+
+
+import java.util.List;
+import entity.*;
+import java.util.Date;  
+import javax.ejb.EJB;
+import session_bean.CategorySessionBean;
+import session_bean.ProductDetailSessionBean;
+import session_bean.ProductSessionBean;
 
 /**
  *
@@ -27,6 +37,12 @@ import javax.servlet.annotation.MultipartConfig;
 public class viewAddProduct extends HttpServlet {
 
     String previewPath = "img\\";
+    @EJB
+    private CategorySessionBean categorySB;
+    @EJB
+    private ProductSessionBean productSB;
+    @EJB
+    private ProductDetailSessionBean productDetailSB;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -77,37 +93,21 @@ public class viewAddProduct extends HttpServlet {
                 }
             }
         session.setAttribute("allImage", list);
-        
-        try {
-            Context initContext = new InitialContext(); 
-            Context envContext = (Context) initContext.lookup("java:comp/env");
-            DataSource ds = (DataSource) envContext.lookup("jdbc/lab8"); 
-            Connection conn = ds.getConnection();
-            Statement sttm = conn.createStatement( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-           
-            // get product id 
-            String sql = "select count(*) as numRow from product";  
-            ResultSet rs = sttm.executeQuery(sql); 
-            rs.next();
-            String product_id = Integer.toString(rs.getInt("numRow") + 1);  
-            session.setAttribute("product_id", product_id);
-            
-            sttm = conn.createStatement();
-            sql = "select * from category where category_id=" + category_id;       
-            rs = sttm.executeQuery(sql);
-            if(rs.next()){
-                categoryName = rs.getString("name");
-                session.setAttribute("categoryName", categoryName);
-                session.setAttribute("category_id", category_id);
-            }
-            else {
-                session.setAttribute("wrongCategory", "1");
-                request.getRequestDispatcher("/addFail.jsp").forward(request, response);
-            } 
-        }catch (SQLException | NamingException ex) {
-            request.getRequestDispatcher("/addFail.jsp").forward(request, response);
-            System.err.println(ex);
+        List<Product> products = productSB.findAll();
+        int size = products.size();
+        String product_id = Integer.toString(products.get(size-1).getProductId() + 1);  
+        session.setAttribute("product_id", product_id);
+        Category category = categorySB.find(Integer.parseInt(category_id));
+        if(category != null){
+            categoryName = category.getName();
+            session.setAttribute("categoryName", categoryName);
+            session.setAttribute("category_id", category_id);
         }
+        else {
+            session.setAttribute("wrongCategory", "1");
+            request.getRequestDispatcher("/addFail.jsp").forward(request, response);
+        } 
+        
        
         request.getRequestDispatcher("/viewAddProduct.jsp").forward(request, response);
     }

@@ -15,15 +15,24 @@ public class OrderInfo {
     private String ccNumber;
     private int confirmationNumber;
     private String dateCreated;
+    private String status;
     private List<String> products;
     private List<String> amounts;
-
+    
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     

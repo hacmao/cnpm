@@ -63,7 +63,7 @@
                 <!-- Menu -->
                 <ul class="menu">
                     <li class="menu-apple">
-                    <a href="index.jsp">
+                    <a href="index">
                         <i class="fab fa-apple" aria-hidden="true"></i>
                     </a>
                     </li>

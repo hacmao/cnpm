@@ -27,6 +27,9 @@
 </script>
 <img src="img/store.jpg" width="20%">
 <div>
+    <c:if test="${isLogin == '0' or isLogin == null}">
+        <c:redirect url="/login/login.jsp"/>
+    </c:if>
     <div class="one-half" style="padding-left: 50px;">
         <div class="heading_bg">
         <h2>Checkout</h2>
@@ -40,11 +43,30 @@
                 We were unable to process your order. Please try again!
             </p>
         </c:if>
+        <c:if test="${!empty wrongUsername}">
+            <p style="color: #c00; font-style: italic">
+                Cannot find username.
+            </p>
+        </c:if>
+        <%//zero out 
+            session.setAttribute("orderFailureFlag", null);
+            session.setAttribute("wrongUsername", null);
+        %>
         <form id="checkoutForm" action="<c:url value='purchase' />" method="post">
-            <fieldset>
-                <label>Name<span class="required">*</span></label>
-                <input type="text" name="name" id="name" value="${form.name}" />
-            </fieldset>
+            <c:choose>
+                <c:when test="${isLogin != '1'}">
+                    <fieldset>
+                        <label>Name<span class="required">*</span></label>
+                        <input type="text" name="name" id="name" value="${user.name}" readonly="true" />
+                    </fieldset>
+                </c:when>
+                <c:otherwise>
+                    <fieldset>
+                        <label>Name<span class="required">*</span></label>
+                        <input type="text" name="name" id="name" value="${user.name}" />
+                    </fieldset>
+                </c:otherwise>
+            </c:choose>
             <fieldset>
                 <label>Email<span class="required">*</span></label>
                 <input type="text" name="email" id="email" value="${form.email}" />

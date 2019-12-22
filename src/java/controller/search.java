@@ -5,6 +5,8 @@
  */
 package controller;
 
+import entity.*;
+import session_bean.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,7 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.naming.*;
 import java.sql.*;
+import java.util.ArrayList;
+import javax.ejb.*;
+import javax.servlet.http.HttpSession;
 import javax.sql.*;
+import java.util.*;
 
 /**
  *
@@ -21,11 +27,18 @@ import javax.sql.*;
  */
 public class search extends HttpServlet {
 
-  
+    @EJB
+    CategorySessionBean categorySessionBean;
+    @EJB
+    ProductSessionBean productSessionBean;
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String par = (String) request.getParameter("search");
+        HttpSession session = request.getSession();
+        session.setAttribute("par", par); 
+        List<Product> categoryProducts = new ArrayList<Product>();
         try {
             Context initContext = new InitialContext(); 
             Context envContext = (Context) initContext.lookup("java:comp/env");
@@ -36,14 +49,38 @@ public class search extends HttpServlet {
             ResultSet rs = sttm.executeQuery(sql); 
             if (rs.next()) {
                 int id = rs.getInt("category_id");
-                request.getRequestDispatcher("category?" + id).forward(request, response);
-            } 
-            else {
-                request.getRequestDispatcher("category?" + 0).forward(request, response);
+                Category category = categorySessionBean.find(id);
+                List<Product> products = productSessionBean.findAll();
+                for (Product p : products){    
+                    if(p.getCategorycategoryid().getCategoryId() == id) {
+                        categoryProducts.add(p);
+                    }
+                }
             }
-            } catch (SQLException | NamingException ex) {
+            sql = "select * from product where name like \"%" + par + "%\" or description like \"%" + par + "%\"";
+            System.err.println(sql);
+            rs = sttm.executeQuery(sql);
+            while (rs.next()){
+                if (rs == null) {
+                    break;
+                }
+                int productId = rs.getInt("product_id");
+                Product product = productSessionBean.find(productId);
+                if (!categoryProducts.contains(product)){
+                    categoryProducts.add(product);
+                }
+            }
+            System.err.println(categoryProducts.size());
+            if (categoryProducts.size() == 0) {
+                categoryProducts = null;
+            }
+            session.setAttribute("categoryProducts", categoryProducts);
+            response.sendRedirect("search.jsp");
+        } catch (SQLException | NamingException ex) {
             System.err.println(ex);
         }
+        
+        
     }
 
 

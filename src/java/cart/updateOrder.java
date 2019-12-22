@@ -31,7 +31,7 @@ import session_bean.ProductSessionBean;
  *
  * @author DELL
  */
-public class deleteOrder extends HttpServlet {
+public class updateOrder extends HttpServlet {
     
     @EJB
     private ProductSessionBean productSB;
@@ -72,15 +72,9 @@ public class deleteOrder extends HttpServlet {
                     break;
                 }
             }
-
-            List<OrderedProduct> orderedProducts = orderedProductSB.findByOrderId(customerOrder.getOrderId());
-            for (OrderedProduct op : orderedProducts) {
-                orderedProductSB.remove(op);
-            }
-            customerOrderSB.remove(customerOrder);
-            customerSB.remove(customer);
+            customerOrder.setStatus(request.getParameter("status"));
+            customerOrderSB.edit(customerOrder);
             request.getRequestDispatcher("index.jsp").forward(request, response);
-            return;
         }
     }
 }

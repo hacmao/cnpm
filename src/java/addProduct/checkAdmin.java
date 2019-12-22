@@ -5,7 +5,7 @@
  */
 package addProduct;
 
-import entity.User;
+import entity.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -67,7 +67,10 @@ public class checkAdmin extends HttpServlet {
         String checkout = (String) session.getAttribute("isCheckout");
         System.err.println(checkout);
         if (checkout != null) {
-            
+            Form form = (Form) session.getAttribute("form");
+            if (form != null){
+                form.setName(name);
+            }
             response.sendRedirect("checkout.jsp");
             return;
         }

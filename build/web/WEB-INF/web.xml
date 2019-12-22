@@ -41,6 +41,26 @@
         <servlet-name>deleteOrder</servlet-name>
         <servlet-class>cart.deleteOrder</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>updateOrder</servlet-name>
+        <servlet-class>cart.updateOrder</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>checkUserOrder</servlet-name>
+        <servlet-class>cart.checkUserOrder</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>updateProduct</servlet-name>
+        <servlet-class>addProduct.updateProduct</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteProduct</servlet-name>
+        <servlet-class>addProduct.deleteProduct</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>userInfo</servlet-name>
+        <servlet-class>controller.userInfo</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/ControllerServlet</url-pattern>
@@ -53,6 +73,7 @@
         <url-pattern>/purchase</url-pattern>
         <url-pattern>/checkOrder</url-pattern>
         <url-pattern>/updateProfile</url-pattern>
+        <url-pattern>/index</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -81,6 +102,26 @@
     <servlet-mapping>
         <servlet-name>deleteOrder</servlet-name>
         <url-pattern>/deleteOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateOrder</servlet-name>
+        <url-pattern>/updateOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>checkUserOrder</servlet-name>
+        <url-pattern>/checkUserOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateProduct</servlet-name>
+        <url-pattern>/updateProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteProduct</servlet-name>
+        <url-pattern>/deleteProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>userInfo</servlet-name>
+        <url-pattern>/userInfo</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -115,6 +156,9 @@
             <url-pattern>/checkout.jsp</url-pattern>
             <url-pattern>/confirmation.jsp</url-pattern>
             <url-pattern>/checkOrder.jsp</url-pattern>
+            <url-pattern>/checkUserOrder.jsp</url-pattern>
+            <url-pattern>/search.jsp</url-pattern>
+            <url-pattern>/userInfo.jsp</url-pattern>
             <!-- và các trang khác -->
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>

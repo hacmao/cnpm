@@ -80,6 +80,7 @@ public class OrderManager {
     private CustomerOrder addOrder(Customer customer, ShoppingCart cart) {
        // set up customer order
        CustomerOrder order = new CustomerOrder();
+       order.setStatus("confirm");
        order.setCustomerId(customer);
        order.setAmount(cart.getSubtotal() +5);
        // create confirmation number

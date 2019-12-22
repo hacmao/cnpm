@@ -75,11 +75,16 @@ public class ControllerServlet extends HttpServlet {
                     
                 }
                 try {
-                    Category selectedCategory;
-                    List<Product> categoryProducts;
-                    selectedCategory = categorySB.find(Integer.parseInt(categoryId));
+                    Category selectedCategory = categorySB.find(Integer.parseInt(categoryId));
+                    List<Product> products = productSB.findAll();
+                    List<Product> categoryProducts = new ArrayList<Product>();
+                    for (Product p : products){    
+                        if(p.getCategorycategoryid().getCategoryId() == Integer.parseInt(categoryId)) {
+                            categoryProducts.add(p);
+                        }
+                    }
+                    
                     session.setAttribute("selectedCategory", selectedCategory);
-                    categoryProducts = (List<Product>) selectedCategory.getProductCollection();
                     session.setAttribute("categoryProducts", categoryProducts);
                 } catch(Exception ex) {
                     System.err.println(ex);
@@ -102,6 +107,19 @@ public class ControllerServlet extends HttpServlet {
                 session.getAttribute("cart");
                 cart.clear();
             }
+        }
+        else if (userPath.equals("/index")){
+            List<Product> products = productSB.findAll();
+            int size = products.size();
+            List<ProductDetail> productDetails = productDetailSB.findAll();
+            Collections.sort(productDetails, Comparator.comparing(ProductDetail::getNumSelled)); 
+            List<Product> bestProducts = new ArrayList<Product>();
+            for (int i=0;i < 5; i++) {
+                bestProducts.add(productSB.find(productDetails.get(size - i - 1).getProductId()));
+            }
+
+            session.setAttribute("bestProducts", bestProducts);
+            session.setAttribute("newProducts", products.subList(size - 5, size ));
         }
         else if (userPath.equals("/addToCart")) {
             // if user is adding item to cart for first time
@@ -129,12 +147,15 @@ public class ControllerServlet extends HttpServlet {
             userPath = userView;
         } 
         else if (userPath.equals("/checkOrder")){
-                List<Customer> customers = customerSB.findAll();
-                List<CustomerOrder> customerOrders = customerOrderSB.findAll(); 
-                
-                List<OrderInfo> orderInfos = new ArrayList<OrderInfo>() ;
-                SimpleDateFormat  df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-                int size = customers.size(); 
+            List<Customer> customers = customerSB.findAll();
+            List<CustomerOrder> customerOrders = customerOrderSB.findAll(); 
+
+            List<OrderInfo> orderInfos = new ArrayList<OrderInfo>() ;
+            SimpleDateFormat  df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+            int size;
+            if (customers != null){
+                size = customers.size(); 
+                System.err.println(customers);
                 CustomerOrder customerOrder = null;
                 for (int i=0; i < size; i++) {
                     Customer customer = customers.get(i);
@@ -145,31 +166,34 @@ public class ControllerServlet extends HttpServlet {
                             break;
                         }
                     }
-                    
+
                     OrderInfo orderInfo = new OrderInfo();
                     orderInfo.setId(customerId);
                     orderInfo.setName(customer.getName());
                     orderInfo.setCcNumber(customer.getCcNumber());
                     orderInfo.setConfirmationNumber(customerOrder.getConfirmationNumber()); 
                     orderInfo.setDateCreated(df.format(customerOrder.getDateCreated())); 
+                    orderInfo.setStatus(customerOrder.getStatus());
                     List<String> products = new ArrayList<String>();
                     List<String> amounts = new ArrayList<String>();
-                    
+
                     List<OrderedProduct> orderedProducts = orderedProductSB.findByOrderId(customerOrder.getOrderId());
                     for (OrderedProduct op : orderedProducts) {
                         Product p = (Product) productSB.find(op.getProductId().getProductId());
                         products.add(p.getName());
                         amounts.add(Integer.toString(op.getQuantity()));
                     }
-                    
+
                     orderInfo.setProducts(products);
                     orderInfo.setAmounts(amounts);
                     orderInfos.add(orderInfo);
-                    
+
                 }
-                
-                session.setAttribute("size", size);
-                session.setAttribute("orderInfos", orderInfos);
+            } else size = 0;
+            session.setAttribute("size", size);
+            System.err.println(size);
+            System.err.println(orderInfos);
+            session.setAttribute("orderInfos", orderInfos);
 
         }
         
@@ -214,7 +238,9 @@ public class ControllerServlet extends HttpServlet {
         else if (userPath.equals("/purchase")) {
             session.setAttribute("isCheckout", "1");
             String isLogin = (String) session.getAttribute("isLogin");
-            if (isLogin == "0" || isLogin == null) {
+            
+            if (cart != null) {
+                
                 Form form = new Form();
                 String name = request.getParameter("name");
                 String email = request.getParameter("email");
@@ -230,26 +256,24 @@ public class ControllerServlet extends HttpServlet {
                 form.setCityRegion(cityRegion);
                 form.setCcNumber(ccNumber);
                 
-                session.setAttribute("form", form);
-                request.getRequestDispatcher("login/login.jsp").forward(request, response);
-                return;
-            }
-            if (cart != null) {
-                Form form = new Form();
-                String name = request.getParameter("name");
-                String email = request.getParameter("email");
-                String phone = request.getParameter("phone");
-                String address = request.getParameter("address");
-                String cityRegion = request.getParameter("cityRegion");
-                String ccNumber = request.getParameter("creditcard");
-
-                form.setName(name);
-                form.setEmail(email);
-                form.setPhone(phone);
-                form.setAddress(address);
-                form.setCityRegion(cityRegion);
-                form.setCcNumber(ccNumber);
-
+                if (isLogin.equals("1")) {
+                    User user = userSB.find(name); 
+                    if (user == null) {
+                        session.setAttribute("wrongUsername", true);
+                        session.setAttribute("form", form);
+                        request.getRequestDispatcher("checkout.jsp").forward(request, response);
+                        return;
+                    } else {
+                        
+                        if (!name.equals("admin")){
+                            form.setName(name + "(admin)");
+                            name = name + "(admin)";
+                        }
+                    }
+                    
+                    
+                }
+                
                 boolean validationErrorFlag = false;
                 Set<ConstraintViolation<Form>> violations = validator.validate(form);
                 if (violations.size() > 0) {

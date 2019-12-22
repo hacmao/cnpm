@@ -46,12 +46,12 @@
     <c:if test="${isLogin=='1'}">
         <strong>Admin functions : </strong><br>
         <a href="addProduct.jsp"><button> Add product</button></a>
-        <a href="#"><button> Delete Product</button></a>
         <a href="checkOrder"><button> Check Order</button></a> 
+        <a href="userInfo"><button>User Info</button></a>
     </c:if>
     <c:if test="${isLogin=='2'}">
         <strong>User functions : </strong><br>
-        <a href="#"><button> Check Order</button></a>
+        <a href="checkUserOrder"><button> Check Order</button></a>
     </c:if>    
 
 
